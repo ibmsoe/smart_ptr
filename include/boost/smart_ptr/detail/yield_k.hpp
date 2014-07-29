@@ -98,12 +98,11 @@ inline void yield( unsigned k )
 
 #elif defined( BOOST_HAS_PTHREADS )
 
-#ifdef _AIX
-#define var xvarx
-#endif
+#ifndef _AIX
 #include <sched.h>
-#ifdef _AIX
-#undef var
+#else
+    // AIX's sched.h defines ::var which sometimes conflicts with Lambda's var
+        extern "C" int sched_yield(void);
 #endif
 
 #include <time.h>
